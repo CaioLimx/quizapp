@@ -99,7 +99,7 @@ function montarPergunta() {
                 </label>
             </form>
 
-            <button>Enviar</button>
+            <button>Responder</button>
         </section>
     `
 }
@@ -109,13 +109,27 @@ function alterarSinais(texto) {
 }
 
 function guardarResposta(evento) {
-    resposta = evento.target.value
     idInputResposta = evento.target.id
     const botaoEnviar = document.querySelector(".alternativas button")
     botaoEnviar.addEventListener("click", validarResposta)
 }
 
 function validarResposta(){
+
+    const botaoEnviar = document.querySelector(".alternativas button")
+    botaoEnviar.innerText = "Próxima"
+    botaoEnviar.removeEventListener("click", validarResposta)
+    
+    if (pergunta === 10) {
+        botaoEnviar.innerText = "Finalizar"
+        botaoEnviar.addEventListener("click", finalizar)
+    } else {
+        botaoEnviar.addEventListener(("click", proximaPergunta))
+    
+        
+
+    }
+
     if(resposta === quiz.questions[pergunta-1].answer) {
         document.querySelector(`label[for='${idInputResposta}']`).setAttribute("id", "correta")
         pontos = pontos + 1
@@ -125,12 +139,21 @@ function validarResposta(){
     }
     }
 
+    pergunta = pergunta + 1
 
-async function iniciar() {
-    alterarAssunto()
-    await buscarPerguntas()
-    montarPergunta()
-    const inputsResposta = document.querySelectorAll(".alternativas input")
+    function finalizar() {
+        localStorage.setItem("pontos", pontos)
+
+        window.location.href = "../resultado/resultado.html"
+    }
+
+    function proximaPergunta(){
+        montarPergunta()
+        adicionarEventoInputs
+    }
+
+    function adicionarEventoInputs() {
+        const inputsResposta = document.querySelectorAll(".alternativas input")
     inputsResposta.forEach(input => {
         input.addEventListener("click", guardarResposta)
 
@@ -138,6 +161,17 @@ async function iniciar() {
             respostaCorretaId = input.id
         }
     })
+    }
+
+
+async function iniciar() {
+    alterarAssunto()
+    await buscarPerguntas()
+    montarPergunta()
+    adicionarEventoInputs()
+    
+    
+    
 
 }
 
