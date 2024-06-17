@@ -12,166 +12,161 @@ let idInputResposta = ""
 let respostaCorretaId = ""
 
 botaoTema.addEventListener("click", () => {
-    trocarTema(body, botaoTema)
+trocarTema(body, botaoTema)
 })
 
 verificarTema(body, botaoTema)
 
 function alterarAssunto() {
-    const divIcone = document.querySelector(".assunto_icone")
-    const iconeImg = document.querySelector(".assunto_icone img")
-    const assuntoTitulo = document.querySelector(".assunto h1")
-    
-    divIcone.classList.add(assunto.toLowerCase())
-    iconeImg.setAttribute("src," `../../assets/images/icon-${assunto.toLowerCase()}.svg`)
-    iconeImg.setAttribute("alt", `ícone de ${assunto}`)
-    assuntoTitulo.innerText = assunto
-}
+const divIcone = document.querySelector(".assunto_icone")
+const iconeImg = document.querySelector(".assunto_icone img")
+const assuntoTitulo = document.querySelector(".assunto h1")
 
+divIcone.classList.add(assunto.toLowerCase())
+iconeImg.setAttribute("src", `../../assets/images/icon-${assunto.toLowerCase()}.svg`)
+iconeImg.setAttribute("alt", `ícone de ${assunto}`)
+assuntoTitulo.innerText = assunto
+}
 
 async function buscarPerguntas() {
-    const urlDados = "../../datajson"
-    
-    await fetch(urlDados).then(resposta => resposta.json()).then(dados => {
-        dados.quizzes.forEach(dado => {
-            if (dado.title === assunto) {
-                quiz = dado
-            }
-        })
-    })
+const urlDados = "../../datajson"
 
-    
+
+await fetch(urlDados).then(resposta => resposta.json()).then(dados => {
+    dados.quizzes.forEach(dado => {
+        if (dado.title === assunto) {
+            quiz = dado
+        }
+    })
+})
+
 }
 
-
 function montarPergunta() {
-    const main = document.querySelector("main")
+const main = document.querySelector("main")
 
-    main.innerHTML = `
-        <section class="pergunta">
-            <div>
-            <p>Questão ${pergunta} de 10</p>
 
-                <h2>${alterarSinais(quiz.questions[pergunta-1].question)}</h2>
-            </div>
-            <div class="barra_progresso">
-                <div style="width: ${pergunta * 10}%"></div>
+main.innerHTML = `
+    <section class="pergunta">
+        <div>
+        <p>Questão ${pergunta} de 10</p>
 
-            </div>
-        </section>
+            <h2>${alterarSinais(quiz.questions[pergunta-1].question)}</h2>
+        </div>
+        <div class="barra_progresso">
+            <div style="width: ${pergunta * 10}%"></div>
 
-        <section class="alternativas">
-            <form action="">
-                <label for="alternativa_a">
-                    <input type="radio" id="alternativa_a" name="alternativa" value="${alterarSinais(quiz.questions[pergunta-1].options[0])}">
+        </div>
+    </section>
 
-                    <div>
-                        <span>A</span>
-                        ${alterarSinais(quiz.questions[pergunta-1].options[0])}
-                    </div>
-                </label>
+    <section class="alternativas">
+        <form action="">
+            <label for="alternativa_a">
+                <input type="radio" id="alternativa_a" name="alternativa" value="${alterarSinais(quiz.questions[pergunta-1].options[0])}">
 
-                <label for="alternativa_b">
-                    <input type="radio" id="alternativa_b" name="alternativa" value="${alterarSinais(quiz.questions[pergunta-1].options[1])}">
+                <div>
+                    <span>A</span>
+                    ${alterarSinais(quiz.questions[pergunta-1].options[0])}
+                </div>
+            </label>
 
-                    <div>
-                        <span>B</span>
-                        ${alterarSinais(quiz.questions[pergunta-1].options[1])}
-                    </div>
-                </label>
+            <label for="alternativa_b">
+                <input type="radio" id="alternativa_b" name="alternativa" value="${alterarSinais(quiz.questions[pergunta-1].options[1])}">
 
-                <label for="alternativa_c">
-                    <input type="radio" id="alternativa_c" name="alternativa" value="${alterarSinais(quiz.questions[pergunta-1].options[2])}">
+                <div>
+                    <span>B</span>
+                    ${alterarSinais(quiz.questions[pergunta-1].options[1])}
+                </div>
+            </label>
 
-                    <div>
-                        <span>C</span>
-                        ${alterarSinais(quiz.questions[pergunta-1].options[2])}
-                    </div>
-                </label>
+            <label for="alternativa_c">
+                <input type="radio" id="alternativa_c" name="alternativa" value="${alterarSinais(quiz.questions[pergunta-1].options[2])}">
 
-                <label for="alternativa_d">
-                    <input type="radio" id="alternativa_d" name="alternativa" value="${alterarSinais(quiz.questions[pergunta-1].options[3])}">
+                <div>
+                    <span>C</span>
+                    ${alterarSinais(quiz.questions[pergunta-1].options[2])}
+                </div>
+            </label>
 
-                    <div>
-                        <span>D</span>
-                        ${alterarSinais(quiz.questions[pergunta-1].options[3])}
-                    </div>
-                </label>
-            </form>
+            <label for="alternativa_d">
+                <input type="radio" id="alternativa_d" name="alternativa" value="${alterarSinais(quiz.questions[pergunta-1].options[3])}">
 
-            <button>Responder</button>
-        </section>
-    `
+                <div>
+                    <span>D</span>
+                    ${alterarSinais(quiz.questions[pergunta-1].options[3])}
+                </div>
+            </label>
+        </form>
+
+        <button>Responder</button>
+    </section>
+`
 }
 
 function alterarSinais(texto) {
-    return texto.replace(/</g, "&lt;").replace(/>/g, "&gt;")
+return texto.replace(/</g, "<").replace(/>/g, ">")
 }
 
 function guardarResposta(evento) {
-    idInputResposta = evento.target.id
-    const botaoEnviar = document.querySelector(".alternativas button")
-    botaoEnviar.addEventListener("click", validarResposta)
+idInputResposta = evento.target.id
+const botaoEnviar = document.querySelector(".alternativas button")
+botaoEnviar.addEventListener("click", validarResposta)
 }
 
 function validarResposta(){
 
-    const botaoEnviar = document.querySelector(".alternativas button")
-    botaoEnviar.innerText = "Próxima"
-    botaoEnviar.removeEventListener("click", validarResposta)
+
+const botaoEnviar = document.querySelector(".alternativas button")
+botaoEnviar.innerText = "Próxima"
+botaoEnviar.removeEventListener("click", validarResposta)
+
+if (pergunta === 10) {
+    botaoEnviar.innerText = "Finalizar"
+    botaoEnviar.addEventListener("click", finalizar)
+} else {
+    botaoEnviar.addEventListener(("click", proximaPergunta))
+
     
-    if (pergunta === 10) {
-        botaoEnviar.innerText = "Finalizar"
-        botaoEnviar.addEventListener("click", finalizar)
-    } else {
-        botaoEnviar.addEventListener(("click", proximaPergunta))
-    
-        
 
-    }
+}
 
-    if(resposta === quiz.questions[pergunta-1].answer) {
-        document.querySelector(`label[for='${idInputResposta}']`).setAttribute("id", "correta")
-        pontos = pontos + 1
-    } else {
-        document.querySelector(`label[for='${idInputResposta}']`).setAttribute("id", "errada")
-        document.querySelector(`label[for='${respostaCorretaId}']`).setAttribute("id", "correta")
-    }
-    }
+if(resposta === quiz.questions[pergunta-1].answer) {
+    document.querySelector(`label[for='${idInputResposta}']`).setAttribute("id", "correta")
+    pontos = pontos + 1
+} else {
+    document.querySelector(`label[for='${idInputResposta}']`).setAttribute("id", "errada")
+    document.querySelector(`label[for='${respostaCorretaId}']`).setAttribute("id", "correta")
+}
+}
 
-    pergunta = pergunta + 1
+pergunta = pergunta + 1
 
-    function finalizar() {
-        localStorage.setItem("pontos", pontos)
+function finalizar() {
+    localStorage.setItem("pontos", pontos)
 
-        window.location.href = "../resultado/resultado.html"
-    }
+    window.location.href = "../resultado/resultado.html"
+}
 
-    function proximaPergunta(){
-        montarPergunta()
-        adicionarEventoInputs
-    }
-
-    function adicionarEventoInputs() {
-        const inputsResposta = document.querySelectorAll(".alternativas input")
-    inputsResposta.forEach(input => {
-        input.addEventListener("click", guardarResposta)
-
-        if (input.value === quiz.questions[pergunta-1].answer) {
-            respostaCorretaId = input.id
-        }
-    })
-    }
-
-
-async function iniciar() {
-    alterarAssunto()
-    await buscarPerguntas()
+function proximaPergunta(){
     montarPergunta()
-    adicionarEventoInputs()
-    
-    
-    
+    adicionarEventoInputs
+}
+
+function adicionarEventoInputs() {
+    const inputsResposta = document.querySelectorAll(".alternativas input")
+inputsResposta.forEach(input => {
+    input.addEventListener("click", guardarResposta)
+
+    if (input.value === quiz.questions[pergunta-1].answer) {
+        respostaCorretaId = input.id
+    }
+})
+}
+async function iniciar() {
+alterarAssunto()
+await buscarPerguntas()
+montarPergunta()
+adicionarEventoInputs()
 
 }
 
