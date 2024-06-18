@@ -12,24 +12,24 @@ let idInputResposta = ""
 let respostaCorretaId = ""
 
 botaoTema.addEventListener("click", () => {
-trocarTema(body, botaoTema)
+    trocarTema(body, botaoTema)
 })
 
 verificarTema(body, botaoTema)
 
 function alterarAssunto() {
-const divIcone = document.querySelector(".assunto_icone")
-const iconeImg = document.querySelector(".assunto_icone img")
-const assuntoTitulo = document.querySelector(".assunto h1")
+    const divIcone = document.querySelector(".assunto_icone")
+    const iconeImg = document.querySelector(".assunto_icone img")
+    const assuntoTitulo = document.querySelector(".assunto h1")
 
-divIcone.classList.add(assunto.toLowerCase())
-iconeImg.setAttribute("src", `../../assets/images/icon-${assunto.toLowerCase()}.svg`)
-iconeImg.setAttribute("alt", `ícone de ${assunto}`)
-assuntoTitulo.innerText = assunto
+    divIcone.classList.add(assunto.toLowerCase())
+    iconeImg.setAttribute("src", `../../assets/images/icon-${assunto.toLowerCase()}.svg`)
+    iconeImg.setAttribute("alt", `ícone de ${assunto}`)
+    assuntoTitulo.innerText = assunto
 }
 
 async function buscarPerguntas() {
-const urlDados = "../../datajson"
+    const urlDados = "../../data.json"
 
 
 await fetch(urlDados).then(resposta => resposta.json()).then(dados => {
@@ -43,7 +43,7 @@ await fetch(urlDados).then(resposta => resposta.json()).then(dados => {
 }
 
 function montarPergunta() {
-const main = document.querySelector("main")
+    const main = document.querySelector("main")
 
 
 main.innerHTML = `
@@ -104,42 +104,46 @@ main.innerHTML = `
 }
 
 function alterarSinais(texto) {
-return texto.replace(/</g, "<").replace(/>/g, ">")
+    return texto.replace(/</g, "&lt").replace(/>/g, "&gt;")
 }
 
 function guardarResposta(evento) {
-idInputResposta = evento.target.id
-const botaoEnviar = document.querySelector(".alternativas button")
-botaoEnviar.addEventListener("click", validarResposta)
+
+    resposta = evento.target.value
+    idInputResposta = evento.target.id
+    const botaoEnviar = document.querySelector(".alternativas button")
+    botaoEnviar.addEventListener("click", validarResposta)
 }
 
 function validarResposta(){
+    const botaoEnviar = document.querySelector(".alternativas button")
+    botaoEnviar.innerText = "Próxima"
+    botaoEnviar.removeEventListener("click", validarResposta)
 
-
-const botaoEnviar = document.querySelector(".alternativas button")
-botaoEnviar.innerText = "Próxima"
-botaoEnviar.removeEventListener("click", validarResposta)
-
-if (pergunta === 10) {
-    botaoEnviar.innerText = "Finalizar"
-    botaoEnviar.addEventListener("click", finalizar)
-} else {
-    botaoEnviar.addEventListener(("click", proximaPergunta))
+    if (pergunta === 10) {
+        botaoEnviar.innerText = "Finalizar"
+        botaoEnviar.addEventListener("click", finalizar)
+    } else {
+        botaoEnviar.addEventListener("click", proximaPergunta)
 
     
 
 }
 
-if(resposta === quiz.questions[pergunta-1].answer) {
-    document.querySelector(`label[for='${idInputResposta}']`).setAttribute("id", "correta")
-    pontos = pontos + 1
-} else {
-    document.querySelector(`label[for='${idInputResposta}']`).setAttribute("id", "errada")
-    document.querySelector(`label[for='${respostaCorretaId}']`).setAttribute("id", "correta")
-}
+    if(resposta === quiz.questions[pergunta-1].answer) {
+        document.querySelector(`label[for='${idInputResposta}']`).setAttribute("id", "correta")
+        pontos = pontos + 1
+    } else {
+        document.querySelector(`label[for='${idInputResposta}']`).setAttribute("id", "errada")
+        document.querySelector(`label[for='${respostaCorretaId}']`).setAttribute("id", "correta")
+    }
+    
+    pergunta = pergunta + 1
+
 }
 
-pergunta = pergunta + 1
+
+
 
 function finalizar() {
     localStorage.setItem("pontos", pontos)
@@ -149,13 +153,13 @@ function finalizar() {
 
 function proximaPergunta(){
     montarPergunta()
-    adicionarEventoInputs
+    adicionarEventoInputs()
 }
 
 function adicionarEventoInputs() {
     const inputsResposta = document.querySelectorAll(".alternativas input")
-inputsResposta.forEach(input => {
-    input.addEventListener("click", guardarResposta)
+    inputsResposta.forEach(input => {
+        input.addEventListener("click", guardarResposta)
 
     if (input.value === quiz.questions[pergunta-1].answer) {
         respostaCorretaId = input.id
@@ -163,10 +167,10 @@ inputsResposta.forEach(input => {
 })
 }
 async function iniciar() {
-alterarAssunto()
-await buscarPerguntas()
-montarPergunta()
-adicionarEventoInputs()
+    alterarAssunto()
+    await buscarPerguntas()
+    montarPergunta()
+    adicionarEventoInputs()
 
 }
 
